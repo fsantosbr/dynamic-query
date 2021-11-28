@@ -1,6 +1,6 @@
 package com.fsantosinfo.util;
 
-import java.util.List;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,5 +14,6 @@ import lombok.Setter;
 public class QueryHelper {
     
     private StringBuilder stringBuilder;
-    private List<ParameterQuery> parameters;
+    private Map<String, Object> parameters;
+    //private List<ParameterQuery> parameters;
 }

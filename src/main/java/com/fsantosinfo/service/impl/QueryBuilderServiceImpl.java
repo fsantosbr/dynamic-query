@@ -1,11 +1,12 @@
 package com.fsantosinfo.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fsantosinfo.model.dto.QueryRequestDto;
 import com.fsantosinfo.service.QueryBuilderService;
-import com.fsantosinfo.util.ParameterQuery;
 import com.fsantosinfo.util.QueryHelper;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,9 +22,10 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
     @Override
     public QueryHelper queryBuilder(QueryRequestDto requestBody) {
         
-        List<ParameterQuery> parameters = new ArrayList<>();
-        StringBuilder stringQuery = new StringBuilder();
+        //List<ParameterQuery> parameters = new ArrayList<>();
+        Map<String, Object> parametersMap = new HashMap<>();
 
+        StringBuilder stringQuery = new StringBuilder();
         List<String> whereClauseList = new ArrayList<>();
 
         stringQuery.append("select ");
@@ -37,21 +39,21 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
         if (StringUtils.isNotEmpty(requestBody.getPaymentType())) {
             stringQuery.append(" inner join tab_payment pay on st.payment_id = pay.payment_id");
             whereClauseList.add(" and pay.payment_type = :" + PAYMENT_TYPE);
-            parameters.add(new ParameterQuery(PAYMENT_TYPE, requestBody.getPaymentType()));
+            parametersMap.put(PAYMENT_TYPE, requestBody.getPaymentType());
         }
 
         // active period
         if (requestBody.getActivePeriod() != null) {
             stringQuery.append(" inner join tab_period pr on st.period_id = pr.period_id");
             whereClauseList.add(" and pr.active_period = :" + ACTIVE_PERIOD);
-            parameters.add(new ParameterQuery(ACTIVE_PERIOD, requestBody.getActivePeriod()));
+            parametersMap.put(ACTIVE_PERIOD, requestBody.getActivePeriod());
         }
 
 
         //WHERE
         stringQuery.append(" where ");
         stringQuery.append("sch.num_teachers >= :" + NUM_TEACHERS);
-        parameters.add(new ParameterQuery(NUM_TEACHERS, requestBody.getNumTeachers()));
+        parametersMap.put(NUM_TEACHERS, requestBody.getNumTeachers());
 
 
         for (String whereClause : whereClauseList) {
@@ -60,7 +62,7 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
 
         System.out.println(stringQuery.toString());
 
-        return new QueryHelper(stringQuery, parameters);       
+        return new QueryHelper(stringQuery, parametersMap);       
     }
     
 }
