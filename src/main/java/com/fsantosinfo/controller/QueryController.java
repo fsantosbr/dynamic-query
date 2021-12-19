@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/search")
+@RequestMapping("api/v1/searches")
 public class QueryController {
     
     @Autowired
-    private QueryServiceImpl service;
+    private QueryServiceImpl queryService;
 
-    @PostMapping("")
+    @PostMapping()    
     public ResponseEntity<List<QueryResponseDto>> searchAllByQuery(@RequestBody QueryRequestDto requestBody) {
-        return ResponseEntity.ok().body(this.service.searchAllByQuery(requestBody));
+        return ResponseEntity.ok().body(this.queryService.searchAllByQuery(requestBody));
     }
 }

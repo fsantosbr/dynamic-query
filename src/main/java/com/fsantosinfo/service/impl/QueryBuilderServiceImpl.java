@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fsantosinfo.model.dto.QueryRequestDto;
 import com.fsantosinfo.service.QueryBuilderService;
-import com.fsantosinfo.util.ParameterQuery;
 import com.fsantosinfo.util.QueryHelper;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,9 +20,8 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
     @Override
     public QueryHelper queryBuilder(QueryRequestDto requestBody) {
         
-        List<ParameterQuery> parameters = new ArrayList<>();
+        QueryHelper queryHelper = new QueryHelper();        
         StringBuilder stringQuery = new StringBuilder();
-
         List<String> whereClauseList = new ArrayList<>();
 
         stringQuery.append("select ");
@@ -37,30 +35,30 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
         if (StringUtils.isNotEmpty(requestBody.getPaymentType())) {
             stringQuery.append(" inner join tab_payment pay on st.payment_id = pay.payment_id");
             whereClauseList.add(" and pay.payment_type = :" + PAYMENT_TYPE);
-            parameters.add(new ParameterQuery(PAYMENT_TYPE, requestBody.getPaymentType()));
+            queryHelper.addParameter(PAYMENT_TYPE, requestBody.getPaymentType());
         }
 
         // active period
         if (requestBody.getActivePeriod() != null) {
             stringQuery.append(" inner join tab_period pr on st.period_id = pr.period_id");
             whereClauseList.add(" and pr.active_period = :" + ACTIVE_PERIOD);
-            parameters.add(new ParameterQuery(ACTIVE_PERIOD, requestBody.getActivePeriod()));
+            queryHelper.addParameter(ACTIVE_PERIOD, requestBody.getActivePeriod());
         }
-
 
         //WHERE
         stringQuery.append(" where ");
         stringQuery.append("sch.num_teachers >= :" + NUM_TEACHERS);
-        parameters.add(new ParameterQuery(NUM_TEACHERS, requestBody.getNumTeachers()));
-
+        queryHelper.addParameter(NUM_TEACHERS, requestBody.getNumTeachers());
 
         for (String whereClause : whereClauseList) {
             stringQuery.append(whereClause);
-        }
+        }       
 
-        System.out.println(stringQuery.toString());
+        queryHelper.addStringQuery(stringQuery.toString());
+        // There are scenarios where the query is too large and we must split it into separete methods.
+        // And making the QueryHelper class receive a StringBuilder instead of String will fail.
 
-        return new QueryHelper(stringQuery, parameters);       
+        return  queryHelper;       
     }
     
 }

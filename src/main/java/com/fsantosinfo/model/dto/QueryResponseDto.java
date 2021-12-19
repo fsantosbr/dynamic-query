@@ -1,5 +1,6 @@
 package com.fsantosinfo.model.dto;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
@@ -11,11 +12,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class QueryResponseDto {
+public class QueryResponseDto implements Serializable {
 
-    private BigDecimal studentId;
+    private static final long serialVersionUID = 2L;
+
+    private Long studentId;
     private String studentName;
     private String studentLastname;
-    private BigDecimal studentAge;
-    
+    private Integer studentAge;
 }

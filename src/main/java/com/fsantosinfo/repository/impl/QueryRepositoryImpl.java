@@ -1,15 +1,15 @@
 package com.fsantosinfo.repository.impl;
 
-import static com.fsantosinfo.util.ConverterList.checkingConversionToAnyList;
-
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import com.fsantosinfo.model.dto.QueryResponseDto;
 import com.fsantosinfo.repository.QueryRepository;
-import com.fsantosinfo.util.ParameterQuery;
+import com.fsantosinfo.util.ClassUtils;
 import com.fsantosinfo.util.QueryHelper;
 
 public class QueryRepositoryImpl implements QueryRepository {
@@ -18,23 +18,17 @@ public class QueryRepositoryImpl implements QueryRepository {
     EntityManager entityManager;
 
     @Override
-    public List<Object[]> getAllByQuery(QueryHelper queryHelper) {
-        
-        Query query = entityManager.createNativeQuery(queryHelper.getStringBuilder().toString());
+    public List<QueryResponseDto> getAllByQuery(QueryHelper queryHelper) {
 
-        for (ParameterQuery param : queryHelper.getParameters()) {
-            if (param.getParameterValue() instanceof Long){
-                query.setParameter(param.getParameterName(), param.getParameterValue());
-            }
-            if (param.getParameterValue() instanceof Integer){
-                query.setParameter(param.getParameterName(), param.getParameterValue());
-            }
-            if (param.getParameterValue() instanceof String){
-                query.setParameter(param.getParameterName(), param.getParameterValue());
-            }
+        Query query = entityManager.createNativeQuery(queryHelper.getStringBuilder().toString(),
+                "queryResultSetMapping");
+
+        for (Map.Entry<String, Object> entry : queryHelper.getParameters().entrySet()) {
+            String mapKeyValue = entry.getKey();
+            query.setParameter(mapKeyValue, entry.getValue());
         }
 
-        return checkingConversionToAnyList(Object[].class, query.getResultList());
+        return ClassUtils.checkingListCasting(QueryResponseDto.class, query.getResultList());
     }
-    
+
 }
