@@ -5,5 +5,5 @@ import com.fsantosinfo.util.QueryHelper;
 
 public interface QueryBuilderService {
     
-    QueryHelper queryBuilder(QueryRequestDto requestBody);
+    QueryHelper buildQueryUsingRequestBody(QueryRequestDto requestBody);
 }

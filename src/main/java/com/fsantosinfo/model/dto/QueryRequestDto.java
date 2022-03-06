@@ -15,7 +15,7 @@ public class QueryRequestDto implements Serializable {
 
     private static final long serialVersionUID = 2L;
     
-    private Integer numTeachers;
+    private Integer teacherQuantity;
     private String paymentType;
     private Integer activePeriod;    
 }

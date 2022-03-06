@@ -1,7 +1,6 @@
 package com.fsantosinfo.model.dto;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

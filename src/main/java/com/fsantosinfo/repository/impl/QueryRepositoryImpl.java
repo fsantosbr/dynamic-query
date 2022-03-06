@@ -18,17 +18,21 @@ public class QueryRepositoryImpl implements QueryRepository {
     EntityManager entityManager;
 
     @Override
-    public List<QueryResponseDto> getAllByQuery(QueryHelper queryHelper) {
+    public List<QueryResponseDto> getAllByCustomQuery(QueryHelper queryHelper) {
 
         Query query = entityManager.createNativeQuery(queryHelper.getStringBuilder().toString(),
                 "queryResultSetMapping");
 
-        for (Map.Entry<String, Object> entry : queryHelper.getParameters().entrySet()) {
+        setParametersToQuery(queryHelper.getParameters(), query);
+
+        return ClassUtils.checkingListCasting(QueryResponseDto.class, query.getResultList());
+    }
+
+    private void setParametersToQuery(Map<String, Object> parameters , Query query) {
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             String mapKeyValue = entry.getKey();
             query.setParameter(mapKeyValue, entry.getValue());
         }
-
-        return ClassUtils.checkingListCasting(QueryResponseDto.class, query.getResultList());
     }
 
 }

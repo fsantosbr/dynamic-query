@@ -5,6 +5,7 @@ import java.util.List;
 import com.fsantosinfo.model.dto.QueryRequestDto;
 import com.fsantosinfo.model.dto.QueryResponseDto;
 import com.fsantosinfo.repository.StudentRepository;
+import com.fsantosinfo.service.QueryBuilderService;
 import com.fsantosinfo.service.QueryService;
 import com.fsantosinfo.util.QueryHelper;
 
@@ -18,13 +19,13 @@ public class QueryServiceImpl implements QueryService {
     private StudentRepository studentRepository;   
 
     @Autowired
-    private QueryBuilderServiceImpl queryBuilderService;
+    private QueryBuilderService queryBuilderService;
 
     @Override
-    public List<QueryResponseDto> searchAllByQuery(QueryRequestDto requestBody) {
+    public List<QueryResponseDto> searchAllByCustomQuery(QueryRequestDto requestBody) {
         
-        QueryHelper queryHelper = queryBuilderService.queryBuilder(requestBody);
-        return this.studentRepository.getAllByQuery(queryHelper);        
+        QueryHelper queryHelper = queryBuilderService.buildQueryUsingRequestBody(requestBody);
+        return this.studentRepository.getAllByCustomQuery(queryHelper);        
     }
     
 }

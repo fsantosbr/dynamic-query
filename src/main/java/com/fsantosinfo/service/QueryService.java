@@ -7,6 +7,6 @@ import com.fsantosinfo.model.dto.QueryResponseDto;
 
 public interface QueryService {
 
-    List<QueryResponseDto> searchAllByQuery(QueryRequestDto requestBody);
+    List<QueryResponseDto> searchAllByCustomQuery(QueryRequestDto requestBody);
 
 }

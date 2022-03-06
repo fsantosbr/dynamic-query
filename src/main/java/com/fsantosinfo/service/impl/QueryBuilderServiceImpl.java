@@ -18,7 +18,7 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
     private static final String NUM_TEACHERS = "numTeachers";
 
     @Override
-    public QueryHelper queryBuilder(QueryRequestDto requestBody) {
+    public QueryHelper buildQueryUsingRequestBody(QueryRequestDto requestBody) {
         
         QueryHelper queryHelper = new QueryHelper();        
         StringBuilder stringQuery = new StringBuilder();
@@ -48,15 +48,14 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
         //WHERE
         stringQuery.append(" where ");
         stringQuery.append("sch.num_teachers >= :" + NUM_TEACHERS);
-        queryHelper.addParameter(NUM_TEACHERS, requestBody.getNumTeachers());
+        queryHelper.addParameter(NUM_TEACHERS, requestBody.getTeacherQuantity());
 
         for (String whereClause : whereClauseList) {
             stringQuery.append(whereClause);
         }       
 
         queryHelper.addStringQuery(stringQuery.toString());
-        // There are scenarios where the query is too large and we must split it into separete methods.
-        // And making the QueryHelper class receive a StringBuilder instead of String will fail.
+        // There are scenarios where the query is too large and we must split it into separete methods.       
 
         return  queryHelper;       
     }

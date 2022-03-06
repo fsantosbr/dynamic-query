@@ -7,5 +7,5 @@ import com.fsantosinfo.util.QueryHelper;
 
 public interface QueryRepository {
     
-    List<QueryResponseDto> getAllByQuery(QueryHelper queryHelper);
+    List<QueryResponseDto> getAllByCustomQuery(QueryHelper queryHelper);
 }
